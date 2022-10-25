@@ -69,32 +69,26 @@ public final class ClassFileParser {
                                 String supName,
                                 String[] inter) {
                 Entity entity;
-                if (java.lang.reflect.Modifier.isInterface(access)) {
-                  entity = new Entity(Set.of(),
-                      new TypeInfo(Optional.empty(), name, List.of()),
-                      Stereotype.INTERFACE,
-                      List.of(),
-                      List.of());
-                } else if ((access & Opcodes.ACC_RECORD) != 0) {
-                  entity = new Entity(Set.of(),
-                      new TypeInfo(Optional.empty(), name, List.of()),
-                      Stereotype.RECORD,
-                      List.of(),
-                      List.of());
-                } else if ((access & Opcodes.ACC_ENUM) != 0) {
-                  entity = new Entity(Set.of(),
-                      new TypeInfo(Optional.empty(), name, List.of()),
-                      Stereotype.ENUM,
-                      List.of(),
-                      List.of());
-                } else {
-                  entity = new Entity(Set.of(),
-                      new TypeInfo(Optional.empty(), name, List.of()),
-                      Stereotype.CLASS,
-                      List.of(),
-                      List.of());
-                }
+
+                Stereotype stereotype = getStereotype(access);
+                entity = new Entity(Set.of(), new TypeInfo(Optional.empty(),name,List.of()),stereotype,List.of(),List.of());
                 entities.add(entity);
+              }
+
+
+
+              private Stereotype getStereotype(int access) {
+                if (java.lang.reflect.Modifier.isInterface(access)) {
+                  return Stereotype.INTERFACE;
+                }
+                if ((access & Opcodes.ACC_RECORD) != 0) {
+                  return Stereotype.RECORD;
+                }
+                if ((access & Opcodes.ACC_ENUM) != 0) {
+                  return Stereotype.ENUM;
+                }
+                  return Stereotype.CLASS;
+
               }
 
               @Override
